@@ -8,7 +8,7 @@ const config: Config = {
 //  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://denisqq.github.io',
+  url: 'https://denisqq.github.io/async-arch-courses',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -16,8 +16,8 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'denisqq',
-  projectName: 'async-arch',
-  deploymentBranch: "main",
+  projectName: 'async-arch-courses',
+//  deploymentBranch: "main",
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
