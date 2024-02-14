@@ -11,7 +11,7 @@ const config: Config = {
   url: 'https://denisqq.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/async-arch-courses',
+  baseUrl: '/async-arch-courses/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
