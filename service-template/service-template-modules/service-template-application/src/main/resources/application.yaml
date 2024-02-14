@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    hikari:
+      jdbc-url: ""
+      username: ""
+      password: ""
+
+  kafka:
+    admin:
+      auto-create: true
+    bootstrap-servers:
+      - localhost:9092
+    properties:
+      security.protocol: PLAINTEXT
