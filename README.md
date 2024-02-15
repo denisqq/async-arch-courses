@@ -1,3 +1,4 @@
 # async-arch-courses
-- https://tough-dev.school/architecture
+
+Документация и ДЗ:
 - https://denisqq.github.io/async-arch-courses/
