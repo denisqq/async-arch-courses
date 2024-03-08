@@ -1,0 +1,52 @@
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://auth-server:9000
+        client:
+          task-tracker-oidc:
+            registration:
+              client-id: task-tracker
+              client-secret: "{noop}secret"
+              client-name: Клиент для Таск Трекера
+              client-authentication-methods:
+                - client_secret_basic
+              authorization-grant-types:
+                - authorization_code
+                - refresh_token
+#                - client_credentials
+              redirect-uris:
+                - http://client-server:8090/login/oauth2/code/task-tracker-oidc
+                - http://client-server:8090/authorized
+              scopes:
+                - openid
+                - task.read
+#              post-logout-redirect-uris:
+#                - "http://127.0.0.1:8090/"
+#            require-authorization-consent: true
+#  jpa:
+#    defer-datasource-initialization: true
+#  datasource:
+#    url: "jdbc:postgresql://localhost:5432/postgres"
+#    username: test
+#    password: test
+
+
+  kafka:
+    producer:
+      acks: all
+    admin:
+      auto-create: true
+    bootstrap-servers:
+      - localhost:9092
+    properties:
+      security.protocol: PLAINTEXT
+    topics:
+      users-be: users.business.events
+
+server:
+  port: 9000
+
+logging:
+  level:
+    org.springframework.security: trace
