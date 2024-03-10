@@ -1,42 +1,39 @@
 package ru.denisqq.asyncarch.tasktracker.outbox.events
 
+import ru.denisqq.asyncarch.tasktracker.*
 import ru.denisqq.asyncarch.tasktracker.model.Task
+import java.util.*
+import ru.denisqq.asyncarch.tasktracker.taskStatus as TaskStatusAvroEnum
 
-fun Task.toChangedEvent() = TaskChangedEvent(
-    taskId = this.id!!,
-    title = this.title,
-    description = this.description,
-    assignUserId = this.assign.id!!,
-    taskStatus = this.taskStatus
-)
+fun Task.toChangedEvent(): TaskChanged = TaskChanged.newBuilder()
+    .setEventId(UUID.randomUUID().toString())
+    .setTaskIntegrationId(this.integrationId)
+    .setTaskStatus(TaskStatusAvroEnum.valueOf(this.taskStatus.name))
+    .setAssignUserSsoId(this.assign.userSsoId)
+    //TODO Сделать
+    .setJiraId(this.jiraId)
+    .build()
 
-fun List<Task>.toChangedEvent() = TaskChangedBatchEvent(
-    changedTasks = this.map {
-        it.toChangedEvent()
-    }
-)
+fun Task.toAssignedEvent(): TaskAssigned = TaskAssigned.newBuilder()
+    .setEventId(UUID.randomUUID().toString())
+    .setAssignUserSsoId(this.assign.userSsoId)
+    .setTaskIntegrationId(this.integrationId)
+    .build()
 
+fun List<Task>.toShuffledEvent(): TaskShuffled = TaskShuffled.newBuilder()
+    .setEventId(UUID.randomUUID().toString())
+    .setAssignedTasks(
+        this.map {
+            TaskShuffleAssign.newBuilder()
+                .setTaskIntegrationId(it.integrationId)
+                .setAssignUserSsoId(it.assign.userSsoId)
+                .build()
+        }
+    )
+    .build()
 
-fun Task.toCreatedEvent() = TaskCreatedEvent(
-    taskId = this.id!!,
-    assignUserId = this.assign.id!!
-)
-
-fun Task.toAssignedEvent() = TaskAssignedEvent(
-    taskId = this.id!!,
-    assignUserId = this.assign.id!!
-)
-
-fun List<Task>.toShuffledEvent() = TaskShuffledEvent(
-    taskAssignedEvents = this.map {
-        TaskAssignedEvent(
-            taskId = it.id!!,
-            assignUserId = it.assign.id!!
-        )
-    }
-)
-
-fun Task.toCompletedTaskEvent() = TaskCompletedEvent(
-    taskId = this.id!!,
-    assignUserId = this.assign.id!!
-)
+fun Task.toCompletedTaskEvent(): TaskCompleted = TaskCompleted.newBuilder()
+    .setEventId(UUID.randomUUID().toString())
+    .setAssignUserSsoId(this.assign.userSsoId)
+    .setTaskIntegrationId(this.integrationId)
+    .build()

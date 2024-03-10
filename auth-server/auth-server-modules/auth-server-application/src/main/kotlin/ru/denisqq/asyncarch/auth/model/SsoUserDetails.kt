@@ -2,7 +2,7 @@ package ru.denisqq.asyncarch.auth.model
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
-import java.util.UUID
+import java.util.*
 
 class SsoUserDetails(
     username: String,

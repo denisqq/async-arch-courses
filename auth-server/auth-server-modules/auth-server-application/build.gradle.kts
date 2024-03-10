@@ -4,12 +4,17 @@ plugins {
 //    kotlin("plugin.jpa") version "1.9.22"
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
 }
 
 group = "ru.denisqq"
 
 repositories {
+    maven {
+        setUrl("https://packages.confluent.io/maven/")
+    }
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
@@ -23,19 +28,25 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    implementation("org.apache.avro:avro:1.11.3")
+    implementation("io.confluent:kafka-avro-serializer:7.6.0")
+    implementation("io.confluent:kafka-streams-avro-serde:7.6.0")
+    implementation("io.confluent:kafka-schema-registry-client:7.6.0")
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
-
 }
-
 
 tasks.test {
     useJUnitPlatform()
 }
 kotlin {
     jvmToolchain(21)
+}
+
+tasks.generateAvroJava {
+    source("../../../avro-schemas/users")
 }

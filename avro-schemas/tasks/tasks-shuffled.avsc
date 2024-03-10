@@ -1,0 +1,34 @@
+{
+  "namespace": "ru.denisqq.asyncarch.tasktracker",
+  "type": "record",
+  "name": "TaskShuffled",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "assignedTasks",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "TaskShuffleAssign",
+          "fields": [
+            {
+              "name": "taskIntegrationId",
+              "type": "string",
+              "avro.java.string": "String"
+            },
+            {
+              "name": "assignUserSsoId",
+              "type": "string",
+              "avro.java.string": "String"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

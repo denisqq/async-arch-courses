@@ -47,24 +47,24 @@ spring:
   kafka:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      auto-offset-reset: latest
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: earliest
       group-id: task-tracker
-      properties:
-        spring.json.trusted.packages: ru.denisqq.asyncarch.tasktracker.kafka.UsersBeConsumer.UserRegisteredEvent
     producer:
       acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
     admin:
       auto-create: true
     bootstrap-servers:
       - localhost:9092
     properties:
       security.protocol: PLAINTEXT
+      schema.registry.url: http://localhost:8083
     topics:
-      users-be: users.business.events
-      destination-map:
-        task-cud-streaming: tasks.changes.streaming
-        task-be-events: tasks.business.events
+      users-lifecycle: users.lifecycle
+      task-cud-streaming: tasks.changes.streaming
+      task-workflow-events: tasks.workflow
 
 server:
   port: 8090

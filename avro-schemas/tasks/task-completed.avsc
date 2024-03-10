@@ -1,0 +1,22 @@
+{
+  "namespace": "ru.denisqq.asyncarch.tasktracker",
+  "type": "record",
+  "name": "TaskCompleted",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "taskIntegrationId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "assignUserSsoId",
+      "type": "string",
+      "avro.java.string": "String"
+    }
+  ]
+}

@@ -1,12 +1,11 @@
 package ru.denisqq.asyncarch.tasktracker.service
 
-import ru.denisqq.asyncarch.tasktracker.kafka.UsersBeConsumer
-import ru.denisqq.asyncarch.tasktracker.kafka.UsersBeConsumer.UserRegisteredEvent
+import ru.denisqq.asyncarch.authserver.UserRegistered
 import ru.denisqq.asyncarch.tasktracker.model.User
 
 interface UserService {
 
-    fun createUser(userRegisteredEvent: UserRegisteredEvent)
+    fun createUser(userRegisteredEvent: UserRegistered)
 
     fun findUsersByRole(role: String): List<User>
 
