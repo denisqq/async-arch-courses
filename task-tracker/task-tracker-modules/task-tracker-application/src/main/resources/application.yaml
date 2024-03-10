@@ -61,6 +61,7 @@ spring:
     properties:
       security.protocol: PLAINTEXT
       schema.registry.url: http://localhost:8083
+      specific.avro.reader: true
     topics:
       users-lifecycle: users.lifecycle
       task-cud-streaming: tasks.changes.streaming
