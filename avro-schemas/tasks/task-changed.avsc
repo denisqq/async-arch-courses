@@ -1,0 +1,42 @@
+{
+  "namespace": "ru.denisqq.asyncarch.tasktracker",
+  "type": "record",
+  "name": "TaskChanged",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "taskIntegrationId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "assignUserSsoId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "taskStatus",
+      "type": {
+        "type": "enum",
+        "name": "taskStatus",
+        "symbols": [
+          "OPEN",
+          "COMPLETED"
+        ]
+      }
+    },
+    {
+      "name": "jira_id",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": "null",
+      "avro.java.string": "String"
+    }
+  ]
+}

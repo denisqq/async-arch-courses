@@ -4,23 +4,25 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import ru.denisqq.asyncarch.tasktracker.model.TaskStatus
 import java.util.*
 
+
+//TODO не используется, перешел на avro
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
-    property = "event_class")
-//@JsonSubTypes({
-//    @Type(value = Car.class, name = "car"),
-//    @Type(value = Truck.class, name = "truck")
-//})
+    property = "eventName"
+)
 interface OutboxEvent {
     val destination: String
     val key: String?
         get() = null
+
+    val eventId: String
+        get() = UUID.randomUUID().toString()
 }
 
 interface BusinessEvent : OutboxEvent {
     override val destination: String
-        get() = "task-be-events"
+        get() = "task-workflow-events"
 }
 
 interface CUDEvent : OutboxEvent {
@@ -29,47 +31,47 @@ interface CUDEvent : OutboxEvent {
 }
 
 data class TaskChangedEvent(
-    val taskId: UUID,
+    val taskIntegrationId: String,
     val title: String,
     val description: String,
     val assignUserId: UUID,
     val taskStatus: TaskStatus
 ) : CUDEvent {
     override val key: String
-        get() = this.taskId.toString()
+        get() = this.taskIntegrationId.toString()
 }
 
 data class TaskChangedBatchEvent(
     val changedTasks: List<TaskChangedEvent>
-): CUDEvent
+) : CUDEvent
 
 data class TaskCreatedEvent(
-    val taskId: UUID,
+    val taskIntegrationId: String,
     val assignUserId: UUID
 ) : BusinessEvent {
     override val key: String
-        get() = this.taskId.toString()
+        get() = this.taskIntegrationId.toString()
 }
 
 data class TaskCompletedEvent(
-    val taskId: UUID,
+    val taskIntegrationId: String,
     val assignUserId: UUID
 ) : BusinessEvent {
     override val key: String
-        get() = this.taskId.toString()
+        get() = this.taskIntegrationId.toString()
 }
 
 data class TaskAssignedEvent(
-    val taskId: UUID,
+    val taskIntegrationId: String,
     val assignUserId: UUID
-): BusinessEvent {
+) : BusinessEvent {
     override val key: String
-        get() = this.taskId.toString()
+        get() = this.taskIntegrationId.toString()
 }
 
 data class TaskShuffledEvent(
 //    val originatorId: UUID,
     val taskAssignedEvents: List<TaskAssignedEvent>
-): BusinessEvent {
+) : BusinessEvent {
 
 }

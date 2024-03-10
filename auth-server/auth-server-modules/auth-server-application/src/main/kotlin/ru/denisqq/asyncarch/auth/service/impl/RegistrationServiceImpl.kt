@@ -3,6 +3,7 @@ package ru.denisqq.asyncarch.auth.service.impl
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.annotation.PostConstruct
+import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.kafka.core.KafkaTemplate
@@ -15,6 +16,8 @@ import ru.denisqq.asyncarch.auth.config.TopicProperties
 import ru.denisqq.asyncarch.auth.model.SsoUserDetails
 import ru.denisqq.asyncarch.auth.service.RegistrationService
 import ru.denisqq.asyncarch.auth.web.RegistrationController.RegistrationRequest
+import ru.denisqq.asyncarch.authserver.UserRegistered
+import java.util.*
 import java.util.UUID.randomUUID
 
 @Service
@@ -22,9 +25,9 @@ class RegistrationServiceImpl(
     @Qualifier("users")
     private val detailsManager: UserDetailsManager,
     private val passwordEncoder: PasswordEncoder,
-    private val kafkaTemplate: KafkaTemplate<String, String>,
+    private val kafkaTemplate: KafkaTemplate<String, SpecificRecord>,
     private val objectMapper: ObjectMapper,
-    private val topicProperties: TopicProperties
+    private val topicProperties: TopicProperties,
 ) : RegistrationService {
     override fun register(request: RegistrationRequest): UserDetails {
         val user = SsoUserDetails(
@@ -38,15 +41,14 @@ class RegistrationServiceImpl(
 
         kafkaTemplate.send(
             ProducerRecord(
-                topicProperties.usersBe,
+                topicProperties.usersLifecycle,
                 user.username,
-                objectMapper.writeValueAsString(
-                    UserRegisteredEvent(
-                        username = user.username,
-                        userSsoId = user.userSsoId.toString(),
-                        role = request.role
-                    )
-                )
+                UserRegistered.newBuilder()
+                    .setEventId(UUID.randomUUID().toString())
+                    .setUsername(user.username)
+                    .setRole(request.role)
+                    .setUserSsoId(user.userSsoId.toString())
+                    .build()
             )
         ).get()
 
@@ -65,6 +67,6 @@ class RegistrationServiceImpl(
         val eventName: String = "UserRegisteredEvent",
         val username: String,
         val userSsoId: String,
-        val role: String
+        val role: String,
     )
 }

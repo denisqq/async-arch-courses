@@ -21,6 +21,23 @@ spring:
               scopes:
                 - openid
                 - task.read
+          billing-system-oidc:
+            registration:
+              client-id: billing-system
+              client-secret: "{noop}secret2"
+              client-name: Клиент для Системы биллинга
+              client-authentication-methods:
+                - client_secret_basic
+              authorization-grant-types:
+                - authorization_code
+                - refresh_token
+              #                - client_credentials
+              redirect-uris:
+                - http://client-server:8080/login/oauth2/code/billing-system-oidc
+                - http://client-server:8080/authorized
+              scopes:
+                - openid
+                - billing.read
 #              post-logout-redirect-uris:
 #                - "http://127.0.0.1:8090/"
 #            require-authorization-consent: true
@@ -35,14 +52,18 @@ spring:
   kafka:
     producer:
       acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
     admin:
       auto-create: true
     bootstrap-servers:
       - localhost:9092
     properties:
       security.protocol: PLAINTEXT
+      schema.registry.url: http://localhost:8083
+
     topics:
-      users-be: users.business.events
+      users-lifecycle: users.lifecycle
 
 server:
   port: 9000

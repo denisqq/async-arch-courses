@@ -1,0 +1,27 @@
+{
+  "namespace": "ru.denisqq.asyncarch.authserver",
+  "type": "record",
+  "name": "UserRegistered",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "userSsoId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "role",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "avro.java.string": "String"
+    }
+  ]
+}

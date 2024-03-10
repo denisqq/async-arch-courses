@@ -1,14 +1,14 @@
 package ru.denisqq.asyncarch.tasktracker.model
 
-import jakarta.persistence.*
+import jakarta.persistence.Id
+import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.annotations.UuidGenerator
-import org.springframework.boot.actuate.web.exchanges.HttpExchange.Principal
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.domain.Persistable
 import java.time.OffsetDateTime
-import java.util.UUID
+import java.util.*
 
 @MappedSuperclass
 abstract class AbstractEntity : Persistable<UUID> {
