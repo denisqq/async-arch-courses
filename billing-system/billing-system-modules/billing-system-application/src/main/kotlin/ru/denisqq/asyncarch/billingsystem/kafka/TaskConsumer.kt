@@ -2,6 +2,7 @@ package ru.denisqq.asyncarch.billingsystem.kafka
 
 import org.apache.avro.specific.SpecificRecord
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
 import ru.denisqq.asyncarch.billingsystem.service.TaskService
@@ -23,7 +24,7 @@ class TaskConsumer(
 //        b
 //        errorHandler = "infiniteErrorHandler"
     )
-    fun taskWorkflowConsumer(specificRecord: SpecificRecord) {
+    fun taskWorkflowConsumer(@Payload specificRecord: SpecificRecord) {
         when (specificRecord) {
             is TaskAssigned -> {
                 transactionService.debitTransaction(
@@ -66,7 +67,7 @@ class TaskConsumer(
         topics = ["\${spring.kafka.topics.task-cud-streaming}"],
 //        errorHandler = "fixedAttemptsErrorHandler"
     )
-    fun taskChangesStreaming(taskChanged: TaskChanged) {
+    fun taskChangesStreaming(@Payload taskChanged: TaskChanged) {
         if (!taskService.existByIntegrationId(taskChanged.taskIntegrationId)) {
             taskService.create(taskChanged)
         }
