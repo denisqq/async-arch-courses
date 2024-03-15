@@ -2,10 +2,14 @@ package ru.denisqq.asyncarch.billingsystem.model
 
 import jakarta.persistence.*
 import java.math.BigDecimal
+import java.util.UUID
 
 @Entity
 @Table(
-    indexes = [Index(columnList = "idempotence_key, task_id", unique = true)]
+    indexes = [
+        Index(columnList = "integration_id", unique = true),
+        Index(columnList = "idempotence_key, task_id", unique = true),
+    ]
 )
 class TransactionLog(
     @OneToOne
@@ -28,6 +32,8 @@ class TransactionLog(
 
     val idempotenceKey: String,
 
-    val billingCycleClosed: Boolean = false
+    val billingCycleClosed: Boolean = false,
+
+    val integrationId: String = UUID.randomUUID().toString(),
 ): AbstractEntity() {
 }

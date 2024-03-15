@@ -1,0 +1,69 @@
+{
+  "namespace": "ru.denisqq.asyncarch.tasktracker",
+  "type": "record",
+  "name": "TransactionCreated",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "eventVersion",
+      "type": "string",
+      "avro.java.string": "String",
+      "default": "v1"
+    },
+    {
+      "name": "integrationId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "credit",
+      "type": [
+        "null",
+        {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 18,
+          "scale": 2
+        }
+      ]
+    },
+    {
+      "name": "debit",
+      "type": [
+        "null",
+        {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 18,
+          "scale": 2
+        }
+      ]
+    },
+    {
+      "name": "details",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "taskIntegrationId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "userId",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "transactionProcessedAt",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

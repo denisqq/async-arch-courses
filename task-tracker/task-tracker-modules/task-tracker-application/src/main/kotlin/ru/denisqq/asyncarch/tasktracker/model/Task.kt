@@ -6,7 +6,7 @@ import jakarta.persistence.*
 class Task(
     val integrationId: String,
     val title: String,
-    val jiraId: String,
+    val jiraId: String? = null,
     val description: String,
     @OneToOne
     @JoinColumn(name = "assign_id", referencedColumnName = "id", updatable = false)

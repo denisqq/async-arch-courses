@@ -29,6 +29,7 @@ class RegistrationServiceImpl(
     private val objectMapper: ObjectMapper,
     private val topicProperties: TopicProperties,
 ) : RegistrationService {
+
     override fun register(request: RegistrationRequest): UserDetails {
         val user = SsoUserDetails(
             username = request.username,
@@ -41,7 +42,7 @@ class RegistrationServiceImpl(
 
         kafkaTemplate.send(
             ProducerRecord(
-                topicProperties.usersLifecycle,
+                topicProperties.usersRegistered,
                 user.username,
                 UserRegistered.newBuilder()
                     .setEventId(UUID.randomUUID().toString())
@@ -61,12 +62,4 @@ class RegistrationServiceImpl(
         val users = objectMapper.readValue<List<RegistrationRequest>>(usersJson!!.readAllBytes())
         users.forEach { register(it) }
     }
-
-
-    data class UserRegisteredEvent(
-        val eventName: String = "UserRegisteredEvent",
-        val username: String,
-        val userSsoId: String,
-        val role: String,
-    )
 }

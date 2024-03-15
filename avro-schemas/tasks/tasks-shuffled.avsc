@@ -9,6 +9,12 @@
       "avro.java.string": "String"
     },
     {
+      "name": "eventVersion",
+      "type": "string",
+      "avro.java.string": "String",
+      "default": "v1"
+    },
+    {
       "name": "assignedTasks",
       "type": {
         "type": "array",

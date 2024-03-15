@@ -10,6 +10,7 @@ import ru.denisqq.asyncarch.billingsystem.service.TransactionService
 import ru.denisqq.asyncarch.tasktracker.TaskAssigned
 import ru.denisqq.asyncarch.tasktracker.TaskChanged
 import ru.denisqq.asyncarch.tasktracker.TaskCompleted
+import ru.denisqq.asyncarch.tasktracker.TaskCreated
 import ru.denisqq.asyncarch.tasktracker.TaskShuffled
 
 @Component
@@ -26,7 +27,7 @@ class TaskConsumer(
     )
     fun taskWorkflowConsumer(@Payload specificRecord: SpecificRecord) {
         when (specificRecord) {
-            is TaskAssigned -> {
+            is TaskCreated -> {
                 transactionService.debitTransaction(
                     idempotenceKey = specificRecord.eventId,
                     userSsoId = specificRecord.assignUserSsoId,

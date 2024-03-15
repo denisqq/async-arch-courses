@@ -11,8 +11,8 @@ class UsersConsumer(
     private val userService: UserService
 ) {
 
-    @KafkaListener(topics = ["\${spring.kafka.topics.users-lifecycle}"])
-    fun usersLifeCycleConsumer(@Payload duserRegistered: UserRegistered) {
+    @KafkaListener(topics = ["\${spring.kafka.topics.users-registered}"])
+    fun usersRegisteredConsume(@Payload userRegistered: UserRegistered) {
         userService.createUser(userRegistered)
     }
 

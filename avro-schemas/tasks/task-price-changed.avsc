@@ -1,7 +1,7 @@
 {
   "namespace": "ru.denisqq.asyncarch.tasktracker",
   "type": "record",
-  "name": "TaskCompleted",
+  "name": "TaskPriceChanged",
   "fields": [
     {
       "name": "eventId",
@@ -20,9 +20,22 @@
       "avro.java.string": "String"
     },
     {
-      "name": "assignUserSsoId",
-      "type": "string",
-      "avro.java.string": "String"
+      "name": "completeTaskCost",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      }
+    },
+    {
+      "name": "assignTaskCost",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      }
     }
   ]
 }

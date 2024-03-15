@@ -1,7 +1,7 @@
 {
-  "namespace": "ru.denisqq.asyncarch.authserver",
+  "namespace": "ru.denisqq.asyncarch.tasktracker",
   "type": "record",
-  "name": "UserRegistered",
+  "name": "TaskCreated",
   "fields": [
     {
       "name": "eventId",
@@ -15,18 +15,33 @@
       "default": "v1"
     },
     {
-      "name": "userSsoId",
+      "name": "taskIntegrationId",
       "type": "string",
       "avro.java.string": "String"
     },
     {
-      "name": "role",
+      "name": "assignUserSsoId",
       "type": "string",
       "avro.java.string": "String"
     },
     {
-      "name": "username",
-      "type": "string",
+      "name": "taskStatus",
+      "type": {
+        "type": "enum",
+        "name": "taskStatus",
+        "symbols": [
+          "OPEN",
+          "COMPLETED"
+        ]
+      }
+    },
+    {
+      "name": "jira_id",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": "null",
       "avro.java.string": "String"
     }
   ]
