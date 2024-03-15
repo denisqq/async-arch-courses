@@ -51,5 +51,5 @@ kotlin {
 }
 
 tasks.generateAvroJava {
-    source("../../../avro-schemas/tasks", "../../../avro-schemas/users")
+    source("../../../avro-schemas/billing","../../../avro-schemas/tasks", "../../../avro-schemas/users")
 }

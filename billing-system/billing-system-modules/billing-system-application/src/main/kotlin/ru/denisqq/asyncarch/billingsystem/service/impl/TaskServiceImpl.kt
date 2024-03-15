@@ -1,22 +1,31 @@
 package ru.denisqq.asyncarch.billingsystem.service.impl
 
+import org.apache.avro.specific.SpecificRecord
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.denisqq.asyncarch.billingsystem.config.KafkaTopicProperties
 import ru.denisqq.asyncarch.billingsystem.model.Task
 import ru.denisqq.asyncarch.billingsystem.model.TaskStatus
+import ru.denisqq.asyncarch.billingsystem.model.TaskStatus.COMPLETED
 import ru.denisqq.asyncarch.billingsystem.repository.TaskRepository
 import ru.denisqq.asyncarch.billingsystem.service.TaskService
 import ru.denisqq.asyncarch.billingsystem.service.UserService
 import ru.denisqq.asyncarch.tasktracker.TaskChanged
 import ru.denisqq.asyncarch.tasktracker.TaskCompleted
+import ru.denisqq.asyncarch.tasktracker.TaskPriceChanged
 import java.math.BigDecimal
+import java.util.UUID
 import kotlin.random.Random
 
 
 @Service
 class TaskServiceImpl(
     private val taskRepository: TaskRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val kafkaTemplate: KafkaTemplate<String, SpecificRecord>,
+    private val topicProperties: KafkaTopicProperties
 ) : TaskService {
     @Transactional
     override fun create(taskChanged: TaskChanged): Task {
@@ -28,6 +37,18 @@ class TaskServiceImpl(
             taskStatus = TaskStatus.valueOf(taskChanged.taskStatus.name)
         )
 
+        kafkaTemplate.send(
+            ProducerRecord(
+                topicProperties.taskCudStreaming,
+                null,
+                TaskPriceChanged.newBuilder()
+                    .setEventId(UUID.randomUUID().toString())
+                    .setTaskIntegrationId(task.integrationId)
+                    .setAssignTaskCost(task.assignTaskCost)
+                    .setCompleteTaskCost(task.completeTaskCost)
+                    .build()
+            )
+        )
         return taskRepository.save(task)
     }
 
@@ -36,7 +57,9 @@ class TaskServiceImpl(
     }
 
     override fun completeTask(taskCompleted: TaskCompleted) {
-        TODO("Not yet implemented")
+        val task = taskRepository.findTaskByIntegrationId(taskCompleted.taskIntegrationId)
+        task.taskStatus = COMPLETED
+        taskRepository.save(task)
     }
 
     override fun findByIntegrationId(taskIntegrationId: String): Task {

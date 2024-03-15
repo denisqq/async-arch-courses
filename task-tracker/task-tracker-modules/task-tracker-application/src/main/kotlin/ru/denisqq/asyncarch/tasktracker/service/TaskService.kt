@@ -8,6 +8,7 @@ interface TaskService {
     fun create(taskRequest: TaskCreateRequest): Task
 
     fun findAll(): List<Task>
+
     fun shuffle(): List<Task>
 
     fun completeTask(taskId: UUID): Task

@@ -12,10 +12,10 @@ class UsersConsumer(
 ) {
 
     @KafkaListener(
-        topics = ["\${spring.kafka.topics.users-lifecycle}"],
+        topics = ["\${spring.kafka.topics.users-registered}"],
 //        errorHandler = "fixedAttemptsErrorHandler"
     )
-    fun usersBusinessEvents(@Payload userRegisteredEvent: UserRegistered) {
+    fun usersRegisteredConsume(@Payload userRegisteredEvent: UserRegistered) {
         userService.createUser(userRegisteredEvent)
     }
 

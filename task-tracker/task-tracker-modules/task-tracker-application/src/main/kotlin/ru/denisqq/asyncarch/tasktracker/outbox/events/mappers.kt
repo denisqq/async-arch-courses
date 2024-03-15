@@ -14,11 +14,15 @@ fun Task.toChangedEvent(): TaskChanged = TaskChanged.newBuilder()
     .setJiraId(this.jiraId)
     .build()
 
-fun Task.toAssignedEvent(): TaskAssigned = TaskAssigned.newBuilder()
+fun Task.toCreatedEvent(): TaskCreated = TaskCreated.newBuilder()
     .setEventId(UUID.randomUUID().toString())
-    .setAssignUserSsoId(this.assign.userSsoId)
     .setTaskIntegrationId(this.integrationId)
+    .setTaskStatus(TaskStatusAvroEnum.valueOf(this.taskStatus.name))
+    .setAssignUserSsoId(this.assign.userSsoId)
+    //TODO Сделать
+    .setJiraId(this.jiraId)
     .build()
+
 
 fun List<Task>.toShuffledEvent(): TaskShuffled = TaskShuffled.newBuilder()
     .setEventId(UUID.randomUUID().toString())

@@ -64,9 +64,10 @@ spring:
       schema.registry.url: http://localhost:8083
       specific.avro.reader: true
     topics:
-      users-lifecycle: users.lifecycle
+      users-registered: users.registered
       task-cud-streaming: tasks.changes.streaming
       task-workflow-events: tasks.workflow
+      transaction-streaming: transactions.changes.streaming
 
 server:
   port: 8080

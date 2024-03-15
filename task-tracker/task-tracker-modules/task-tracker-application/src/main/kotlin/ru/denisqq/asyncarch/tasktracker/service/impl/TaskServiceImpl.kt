@@ -7,9 +7,9 @@ import ru.denisqq.asyncarch.tasktracker.model.TaskStatus
 import ru.denisqq.asyncarch.tasktracker.model.TaskStatus.OPEN
 import ru.denisqq.asyncarch.tasktracker.model.User
 import ru.denisqq.asyncarch.tasktracker.outbox.OutboxService
-import ru.denisqq.asyncarch.tasktracker.outbox.events.toAssignedEvent
 import ru.denisqq.asyncarch.tasktracker.outbox.events.toChangedEvent
 import ru.denisqq.asyncarch.tasktracker.outbox.events.toCompletedTaskEvent
+import ru.denisqq.asyncarch.tasktracker.outbox.events.toCreatedEvent
 import ru.denisqq.asyncarch.tasktracker.outbox.events.toShuffledEvent
 import ru.denisqq.asyncarch.tasktracker.repository.TaskRepository
 import ru.denisqq.asyncarch.tasktracker.repository.findOne
@@ -17,7 +17,6 @@ import ru.denisqq.asyncarch.tasktracker.service.TaskService
 import ru.denisqq.asyncarch.tasktracker.service.UserService
 import ru.denisqq.asyncarch.tasktracker.web.request.TaskCreateRequest
 import java.util.*
-import java.util.regex.Pattern
 
 @Service
 class TaskServiceImpl(
@@ -34,8 +33,8 @@ class TaskServiceImpl(
             taskRequest.mapToEntity(randomDev)
         )
 
+        outboxService.createRecord(task.toCreatedEvent())
         outboxService.createRecord(task.toChangedEvent())
-        outboxService.createRecord(task.toAssignedEvent())
 
         return task
     }
