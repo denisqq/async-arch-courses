@@ -4,27 +4,39 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.support.DatabaseStartupValidator.DEFAULT_INTERVAL
 import org.springframework.kafka.listener.*
+import org.springframework.kafka.support.serializer.DeserializationException
+import org.springframework.messaging.handler.invocation.MethodArgumentResolutionException
 import org.springframework.util.backoff.ExponentialBackOff
 import org.springframework.util.backoff.FixedBackOff
+import java.net.SocketTimeoutException
+import java.sql.SQLIntegrityConstraintViolationException
+import java.sql.SQLTimeoutException
+import kotlin.reflect.KClass
 
 @Configuration
 class KafkaConfig {
 
     @Bean
-    fun backOffErrorHandler(): BackOffHandler {
-        return DefaultBackOffHandler()
-    }
+    fun errorHandler() = DefaultErrorHandler(
+        ExponentialBackOff()
+    ).also {
 
-//    @Bean
-//    fun infiniteErrorHandler(): KafkaListenerErrorHandler = DefaultErrorHandler(
-//        ExponentialBackOff()
-//    )
-//
-//    @Bean
-//    fun fixedAttemptsErrorHandler(): CommonErrorHandler = DefaultErrorHandler(
-//        FixedBackOff(
-//            DEFAULT_INTERVAL.toLong(), 5
-//        )
-//    )
+        /*
+        * Классификация того, какие ошибки мы будем реатраить
+        * */
+        it.setClassifications(
+            mapOf(
+                SocketTimeoutException::class.java to true,
+                SQLTimeoutException::class.java to true,
+
+
+                SQLIntegrityConstraintViolationException::class.java to true, // Ошибка в случае, если есть запись с уникальным индексом
+                DeserializationException::class.java to false,
+                MethodArgumentResolutionException::class.java to false,
+                NoSuchMethodException::class.java to false,
+                ClassCastException::class.java to false
+            ), true
+        )
+    }
 
 }

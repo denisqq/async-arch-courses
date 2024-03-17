@@ -25,7 +25,7 @@ class TaskServiceImpl(
     private val taskRepository: TaskRepository,
     private val userService: UserService,
     private val kafkaTemplate: KafkaTemplate<String, SpecificRecord>,
-    private val topicProperties: KafkaTopicProperties
+    private val topicProperties: KafkaTopicProperties,
 ) : TaskService {
     @Transactional
     override fun create(taskChanged: TaskChanged): Task {
@@ -56,14 +56,28 @@ class TaskServiceImpl(
         return taskRepository.existsTaskByIntegrationId(taskIntegrationId)
     }
 
+    @Transactional
     override fun completeTask(taskCompleted: TaskCompleted) {
-        val task = taskRepository.findTaskByIntegrationId(taskCompleted.taskIntegrationId)
-        task.taskStatus = COMPLETED
+        val task = taskRepository.findTaskByIntegrationId(taskCompleted.taskIntegrationId)?.let {
+            it.taskStatus = COMPLETED
+            it
+        } ?: run {
+            Task(
+                integrationId = taskCompleted.taskIntegrationId,
+                taskStatus = COMPLETED
+            )
+        }
         taskRepository.save(task)
     }
 
-    override fun findByIntegrationId(taskIntegrationId: String): Task {
+    override fun findByIntegrationId(taskIntegrationId: String): Task? {
         return taskRepository.findTaskByIntegrationId(taskIntegrationId)
+    }
+
+    override fun create(taskIntegrationId: String): Task {
+        return taskRepository.save(
+            Task(integrationId = taskIntegrationId)
+        )
     }
 
 }

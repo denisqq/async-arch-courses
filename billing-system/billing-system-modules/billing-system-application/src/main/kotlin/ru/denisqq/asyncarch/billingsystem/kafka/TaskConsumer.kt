@@ -2,6 +2,7 @@ package ru.denisqq.asyncarch.billingsystem.kafka
 
 import org.apache.avro.specific.SpecificRecord
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.annotation.RetryableTopic
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
@@ -22,9 +23,9 @@ class TaskConsumer(
 
     @KafkaListener(
         topics = ["\${spring.kafka.topics.task-workflow-events}"],
-//        b
-//        errorHandler = "infiniteErrorHandler"
+        errorHandler = "billingErrorHandler"
     )
+    @RetryableTopic
     fun taskWorkflowConsumer(@Payload specificRecord: SpecificRecord) {
         when (specificRecord) {
             is TaskCreated -> {
