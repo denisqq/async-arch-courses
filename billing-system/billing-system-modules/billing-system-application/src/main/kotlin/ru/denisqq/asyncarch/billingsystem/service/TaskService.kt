@@ -6,8 +6,9 @@ import ru.denisqq.asyncarch.tasktracker.TaskCompleted
 
 interface TaskService {
     fun create(taskChanged: TaskChanged): Task
+    fun create(taskIntegrationId: String): Task
 
-    fun findByIntegrationId(taskIntegrationId: String): Task
+    fun findByIntegrationId(taskIntegrationId: String): Task?
 
     fun existByIntegrationId(taskIntegrationId: String): Boolean
 

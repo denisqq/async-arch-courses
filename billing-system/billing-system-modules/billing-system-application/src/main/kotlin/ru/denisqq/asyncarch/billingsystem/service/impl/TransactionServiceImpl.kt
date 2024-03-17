@@ -33,7 +33,10 @@ class TransactionServiceImpl(
         details: String,
     ) {
         val user = userService.findBySsoId(userSsoId)
-        val task = taskService.findByIntegrationId(taskIntegrationId)
+        // Если нет таска в текущий момент, создаем его пустым
+        val task = taskService.findByIntegrationId(taskIntegrationId).takeIf { it != null } ?: run {
+            taskService.create(taskIntegrationId)
+        }
 
         val transactionLog = TransactionLog(
             idempotenceKey = idempotenceKey,
@@ -54,7 +57,10 @@ class TransactionServiceImpl(
         details: String,
     ) {
         val user = userService.findBySsoId(userSsoId)
-        val task = taskService.findByIntegrationId(taskIntegrationId)
+        // Если нет таска в текущий момент, создаем его пустым
+        val task = taskService.findByIntegrationId(taskIntegrationId).takeIf { it != null } ?: run {
+            taskService.create(taskIntegrationId)
+        }
 
         val transactionLog = TransactionLog(
             idempotenceKey = idempotenceKey,

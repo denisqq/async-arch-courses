@@ -6,7 +6,7 @@ import java.util.*
 
 interface TaskRepository: JpaRepository<Task, UUID> {
 
-    fun findTaskByIntegrationId(integrationId: String): Task
+    fun findTaskByIntegrationId(integrationId: String): Task?
 
     fun existsTaskByIntegrationId(integrationId: String): Boolean
 }
